@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Status das Impressoras</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid black;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+        .online {
+            color: green;
+            font-weight: bold;
+        }
+        .offline {
+            color: red;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h1>Status das Impressoras</h1>
+    <table>
+        <tr>
+            <th>Endereço IP</th>
+            <th>Nome</th>
+            <th>Status</th>
+            <th>Nível de Toner (%)</th>
+            <th>Descrição</th>
+        </tr>
+        {% for printer in printers %}
+        <tr>
+            <td><a href="http://{{ printer.ip }}" target="_blank">{{ printer.ip }}</a></td>
+            <td>{{ printer.name }}</td>
+            <td class="{{ 'online' if printer.status == 'Online' else 'offline' }}">{{ printer.status }}</td>
+            <td>{{ printer.toner_level }}</td>
+            <td>{{ printer.description }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <h2>Adicionar/Editar Descrição</h2>
+    <form method="POST">
+        <label for="ip">Endereço IP:</label>
+        <select name="ip" id="ip">
+            {% for printer in printers %}
+            <option value="{{ printer.ip }}">{{ printer.ip }}</option>
+            {% endfor %}
+        </select><br><br>
+        <label for="description">Descrição:</label>
+        <input type="text" id="description" name="description"><br><br>
+        <input type="submit" value="Salvar">
+    </form>
+</body>
+</html>
